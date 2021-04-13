@@ -24,6 +24,7 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Get a list of Players.
         /// </summary>
         /// <returns>List of Players</returns>
+        [Route("GetPlayers")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
         {
@@ -34,7 +35,8 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Get Player by Id.
         /// </summary>
         /// <returns>Player</returns>
-        [HttpGet("{id}")]
+        [Route("GetPlayer/{id}")]
+        [HttpGet]
         public async Task<ActionResult<Player>> GetPlayer(int id)
         {
             var player = await _context.Players.FindAsync(id);
@@ -51,7 +53,8 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Update Player by Id.
         /// </summary>
         /// <returns>Player</returns>
-        [HttpPut("{id}")]
+        [Route("UpdatePlayer/{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutPlayer(int id, Player player)
         {
             if (id != player.Id)
@@ -84,6 +87,7 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Post new player
         /// </summary>
         /// <returns>Player Created</returns>
+        [Route("NewPlayer")]
         [HttpPost]
         public async Task<ActionResult<Player>> PostPlayer(Player player)
         {

@@ -1,5 +1,7 @@
-﻿using BattleShips_API_DiegoCampos.Services.Interfaces;
+﻿using BattleShips_API_DiegoCampos.Models;
+using BattleShips_API_DiegoCampos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace BattleShips_API_DiegoCampos.Controllers
 {
@@ -18,9 +20,9 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Get a new BattleShip Board.
         /// </summary>
         /// <returns>List of Positions</returns>
-        [Route("board")]
+        [Route("GetBoard")]
         [HttpGet]
-        public ActionResult GetNewBoard()
+        public ActionResult<IEnumerable<Position>> GetNewBoard()
         {
             //Return board
             return Ok(_boardService.GetBoard());
@@ -30,7 +32,7 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// Attack on a new Position and get the updated Board
         /// </summary>
         /// <returns>List of Positions</returns>
-        [Route("board/{_axleX}/{_axleY}")]
+        [Route("Attack/{_axleX}/{_axleY}")]
         [HttpGet]
         public ActionResult Attack(int _axleX, int _axleY)
         {
