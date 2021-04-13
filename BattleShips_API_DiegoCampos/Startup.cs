@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BattleShips_API_DiegoCampos.Models;
+using BattleShips_API_DiegoCampos.Services;
+using BattleShips_API_DiegoCampos.Services.Interfaces;
 
 namespace BattleShips_API_DiegoCampos
 {
@@ -33,6 +35,9 @@ namespace BattleShips_API_DiegoCampos
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BattleShips_API_DiegoCampos", Version = "v1" });
             });
+            services.AddScoped<IBoardService, BoardService>();
+            services.AddMvc();
+
 
             // Mock Database connection
             services.AddDbContext<PlayerDBContext>(options => options.UseInMemoryDatabase("Players"));

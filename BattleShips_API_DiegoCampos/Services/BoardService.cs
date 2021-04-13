@@ -49,12 +49,14 @@ namespace BattleShips_API_DiegoCampos.Services
             if (board.Count == 0)
             {
                 //return new ApiResponse(400, "No Board created!.");
+                LoadBoard();
             }
             if (numOfGuesses > 0)
             {
                 int positionIndex = board.FindIndex(p => p.axleX == _axleX && p.axleY == _axleY);
                 board[positionIndex].attacked = true;
                 numOfGuesses --;
+
             }
             return board;
         }
