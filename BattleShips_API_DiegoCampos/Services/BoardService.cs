@@ -1,5 +1,6 @@
 ﻿using BattleShips_API_DiegoCampos.Models;
 using BattleShips_API_DiegoCampos.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,49 @@ namespace BattleShips_API_DiegoCampos.Services
 {
     public class BoardService : IBoardService
     {
+        private readonly BoardDBContext _boardDB;
+        public BoardService(BoardDBContext context)
+        {
+            _boardDB = context;
+        }
         //Mock board
         List<Position> board = new List<Position>();
         private int columnQuantity = 8;
         private int rowQuantity = 8;
-        private int numOfGuesses = 20;
-
-        public List<Position> LoadBoard()
+        
+        public List<Position> CreateBoard(List<Position> _board)
         {
-            for (int x = 0; x < columnQuantity; x++)
+            // If the Board doesn't exist create It.
+            if(_board.Count == 0)
             {
-                for (int y = 0; y < rowQuantity; y++)
+                for (int x = 0; x < columnQuantity; x++)
                 {
-                    Position pos = new Position() { hasShip = false, attacked = false, axleX = x, axleY = y };
-                    board.Add(pos);
+                    for (int y = 0; y < rowQuantity; y++)
+                    {
+                        Position pos = new Position() { hasShip = false, attacked = false, x = x, y = y };
+                        board.Add(pos);
+                        //_boardDB.Board.DefaultIfEmpty();
+
+                        _boardDB.Board.Add(pos);
+                        _boardDB.SaveChangesAsync();
+                    }
                 }
             }
-
+            // If the Board already exist reset It.
+            else
+            {
+                board = _board;
+                _board.ForEach(data => 
+                {
+                    if(data.attacked || data.hasShip)
+                    {
+                        data.attacked = false;
+                        data.hasShip = false;
+                        _boardDB.Entry(data).State = EntityState.Modified;
+                        _boardDB.SaveChangesAsync();
+                    }
+                });
+            }
             return AddRandomShips(2);
         }
 
@@ -36,42 +63,31 @@ namespace BattleShips_API_DiegoCampos.Services
             {
                 int randomX = r.Next(rowQuantity);
                 int randomY = r.Next(columnQuantity);
-                int positionIndex = board.FindIndex(p => p.axleX == randomX && p.axleY == randomY);
+                int positionIndex = board.FindIndex(p => p.x == randomX && p.y == randomY);
                 board[positionIndex].hasShip = true;
+                _boardDB.Entry(board[positionIndex]).State = EntityState.Modified;
+                _boardDB.SaveChangesAsync();
             }
-
+            //_boardDB.Board.Add(board);
             return board;
         }
 
-        public List<Position> AttackPosition(int _axleX, int _axleY)
+        public List<Position> AttackPosition(List<Position> _board, int _axleX, int _axleY)
         {
-            //var pos = board.Contains(new Position { axleX = axleX, axleY = axleY });
-            if (board.Count == 0)
-            {
-                //return new ApiResponse(400, "No Board created!.");
-                LoadBoard();
-            }
-            if (numOfGuesses > 0)
-            {
-                int positionIndex = board.FindIndex(p => p.axleX == _axleX && p.axleY == _axleY);
-                board[positionIndex].attacked = true;
-                numOfGuesses --;
+            board = _board;
 
-            }
+            int positionIndex = board.FindIndex(p => p.x == _axleX && p.y == _axleY);
+            board[positionIndex].attacked = true;
+            //_boardDB.Board.RemoveRange();
+            _boardDB.Entry(board[positionIndex]).State = EntityState.Modified;
+            _boardDB.SaveChangesAsync();
+
             return board;
         }
         public List<Position> GetBoard()
         {
-            if (board.Count > 0)
-            {
-                return board;
-            }
-            return LoadBoard();
-        }
-
-        public int GetNumOfGuesses()
-        {
-            return numOfGuesses;
+            
+            return board;
         }
     }
 }

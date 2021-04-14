@@ -2,7 +2,9 @@
 using BattleShips_API_DiegoCampos.Services;
 using BattleShips_API_DiegoCampos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BattleShips_API_DiegoCampos.Controllers
 {
@@ -11,22 +13,38 @@ namespace BattleShips_API_DiegoCampos.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardService _boardService;
+        private readonly BoardDBContext _boardDB;
 
-        public BoardController(IBoardService boardService)
+        public BoardController(IBoardService boardService, BoardDBContext boardDB)
         {
             _boardService = boardService;
+            _boardDB = boardDB;
         }
 
         /// <summary>
         /// Get a new BattleShip Board.
         /// </summary>
         /// <returns>List of Positions</returns>
-        [Route("GetBoard")]
+        [Route("CreateBoard")]
         [HttpGet]
-        public ActionResult<IEnumerable<Position>> GetNewBoard()
+        public async Task<ActionResult<IEnumerable<Position>>> CreateBoardAsync()
         {
             //Return board
-            return Ok(_boardService.GetBoard());
+            var board = await _boardDB.Board.ToListAsync();
+            return Ok(_boardService.CreateBoard(board));
+        }
+
+        /// <summary>
+        /// Get a BattleShip Board.
+        /// </summary>
+        /// <returns>List of Positions</returns>
+        [Route("GetBoard")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Position>>> GetBoard()
+        {
+            //Return board
+            var board = _boardDB.Board.ToListAsync();
+            return await board;
         }
 
         /// <summary>
@@ -35,15 +53,10 @@ namespace BattleShips_API_DiegoCampos.Controllers
         /// <returns>List of Positions</returns>
         [Route("Attack/{_axleX}/{_axleY}")]
         [HttpGet]
-        public ActionResult Attack(int _axleX, int _axleY)
+        public async Task<ActionResult> AttackAsync(int _axleX, int _axleY)
         {
-            //loadBoard();
-            //attackPosition(_axleX, _axleY);
-            //var response = new HttpResponseMessage(HttpStatusCode.OK);
-            //response.Content = new StringContent(JsonConvert.SerializeObject(board));
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            //return response;
-            return Ok(_boardService.AttackPosition(_axleX, _axleY));
+            var board = await _boardDB.Board.ToListAsync();
+            return Ok(_boardService.AttackPosition(board, _axleX, _axleY));
         }
 
 

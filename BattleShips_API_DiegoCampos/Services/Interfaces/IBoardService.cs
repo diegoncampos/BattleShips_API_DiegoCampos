@@ -8,7 +8,8 @@ namespace BattleShips_API_DiegoCampos.Services.Interfaces
 {
     public interface IBoardService
     {
+        List<Position> CreateBoard(List<Position> board);
         List<Position> GetBoard();
-        List<Position> AttackPosition(int _axleX, int _axleY);
+        List<Position> AttackPosition(List<Position> board, int _axleX, int _axleY);
     }
 }

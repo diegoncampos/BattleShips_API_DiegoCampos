@@ -41,6 +41,7 @@ namespace BattleShips_API_DiegoCampos
 
             // Mock Database connection
             services.AddDbContext<PlayerDBContext>(options => options.UseInMemoryDatabase("Players"));
+            services.AddDbContext<BoardDBContext>(options => options.UseInMemoryDatabase("Board"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
