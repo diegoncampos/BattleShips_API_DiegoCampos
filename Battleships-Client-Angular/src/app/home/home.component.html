@@ -1,0 +1,38 @@
+<div class="content">
+    <h1>Battleships</h1>
+    <app-board [board]="board" [boardSize]="columnsQuantity"></app-board>
+
+    <h3 id="bottom" [ngStyle]="{'color': message.color}">{{message.message}}</h3>
+    <mat-form-field class="example-full-width">
+        <mat-label>Select Row</mat-label>
+        <input type="number" min="0" max="7" pattern="[0-7]{1}" matInput [(ngModel)]="axles.x" autocomplete="off"
+            #nameFieldR="ngModel">
+    </mat-form-field>
+    <div *ngIf="nameFieldR.errors">
+        <div [hidden]="!nameFieldR.errors.pattern">
+            <p class="has-error">
+                Row range is from 0 to {{rowsQuantity - 1}}
+            </p>
+        </div>
+    </div>
+
+    <mat-form-field class="example-full-width">
+        <mat-label>Select Column</mat-label>
+        <input type="number" min="0" max="7" pattern="[0-7]{1}" matInput [(ngModel)]="axles.y" autocomplete="off"
+            #nameFieldC="ngModel">
+    </mat-form-field>
+    <div *ngIf="nameFieldC.errors">
+        <div [hidden]="!nameFieldC.errors.pattern">
+            <p class="has-error">
+                Column range is from 0 to {{columnsQuantity - 1}}
+            </p>
+        </div>
+    </div>
+
+    <h3 [ngStyle]="{'color': (guesses > 0) ? 'black' : 'red'}">Guesses: {{guesses}}</h3>
+    <button *ngIf="!restart" mat-raised-button color="primary" (click)="attack()"
+        [disabled]="axles.x > rowsQuantity -1  || axles.x == null || axles.y > columnsQuantity - 1  || axles.y == null || !player.name">Attack</button>
+    <button *ngIf="restart" mat-raised-button color="accent" (click)="restartPlay()">Restart</button>
+
+    <app-player [(player)]="player"></app-player>
+</div>

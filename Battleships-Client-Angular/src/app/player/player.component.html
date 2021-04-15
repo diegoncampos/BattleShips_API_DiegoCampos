@@ -1,0 +1,26 @@
+<div *ngIf="!addPlayer">
+    <mat-form-field>
+        <mat-label>Select Player Name</mat-label>
+        <mat-select [(ngModel)]="player" [(value)]="player" (selectionChange)="playerChange.emit(player)">
+            <mat-option *ngFor="let player of players" [value]="player">
+                {{player.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Score</mat-label>
+        <input type="number" matInput [(ngModel)]="player.score" readonly>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Games Played</mat-label>
+        <input type="number" matInput [(ngModel)]="player.gamesPlayed" readonly>
+    </mat-form-field>
+    <span title="Add Player" class="material-icons" id="addPlayer" (click)="addPlayer = !addPlayer">person_add</span>
+</div>
+<div *ngIf="addPlayer">
+    <mat-form-field>
+        <mat-label>New Player Name</mat-label>
+        <input type="string" matInput [(ngModel)]="player.name">
+    </mat-form-field>
+    <span class="material-icons" id="addPlayer" (click)="saveNewPlayer()">save</span>
+</div>

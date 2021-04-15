@@ -3,6 +3,21 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Angular
+/Battleships-Client-Angular/.idea
+/Battleships-Client-Angular/.ionic
+/Battleships-Client-Angular/.sass-cache
+/Battleships-Client-Angular/.sourcemaps
+/Battleships-Client-Angular/.versions
+/Battleships-Client-Angular/.vscode
+/Battleships-Client-Angular/coverage
+/Battleships-Client-Angular/dist
+/Battleships-Client-Angular/platforms
+/Battleships-Client-Angular/plugins
+/Battleships-Client-Angular/www
+/Battleships-Client-Angular/.firebase
+/Battleships-Client-Angular/node_modules
+
 # User-specific files
 *.rsuser
 *.suo

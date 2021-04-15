@@ -1,0 +1,8 @@
+<div class="square">
+    <mat-grid-list [cols]="boardSize">
+        <mat-grid-tile *ngFor="let cell of board">
+            <img id="water" *ngIf="cell.attacked && !cell.hasShip" src="../../assets/water.png">
+            <img id="hit" *ngIf="cell.attacked && cell.hasShip" src="../../assets/hit.png">
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>
