@@ -3,8 +3,6 @@ using BattleShips_API_DiegoCampos.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BattleShips_API_DiegoCampos.Services
 {
@@ -19,7 +17,12 @@ namespace BattleShips_API_DiegoCampos.Services
         List<Position> board = new List<Position>();
         private int columnQuantity = 8;
         private int rowQuantity = 8;
-        
+
+        /// <summary>
+        /// Get a new or reset player board with a custom dimensions
+        /// </summary>
+        /// <param name="_board"></param>
+        /// <returns></returns>
         public List<Position> CreateBoard(List<Position> _board)
         {
             // If the Board doesn't exist create It.
@@ -56,6 +59,11 @@ namespace BattleShips_API_DiegoCampos.Services
             return AddRandomShips(2);
         }
 
+        /// <summary>
+        /// Get a player board with a selected quantity of ships added randomly
+        /// </summary>
+        /// <param name="shipsQuantity"></param>
+        /// <returns></returns>
         public List<Position> AddRandomShips(int shipsQuantity)
         {
             Random r = new Random();
@@ -72,6 +80,13 @@ namespace BattleShips_API_DiegoCampos.Services
             return board;
         }
 
+        /// <summary>
+        /// Edit the player board with a selected attacked position
+        /// </summary>
+        /// <param name="_board"></param>
+        /// <param name="_axleX"></param>
+        /// <param name="_axleY"></param>
+        /// <returns></returns>
         public List<Position> AttackPosition(List<Position> _board, int _axleX, int _axleY)
         {
             board = _board;
@@ -84,6 +99,11 @@ namespace BattleShips_API_DiegoCampos.Services
 
             return board;
         }
+
+        /// <summary>
+        /// Get player board
+        /// </summary>
+        /// <returns></returns>
         public List<Position> GetBoard()
         {
             

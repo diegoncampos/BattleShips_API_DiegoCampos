@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Player } from 'src/models/player';
 import { PlayerService } from 'src/services/player/player.service';
@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public playerService: PlayerService,
-    public boardService: BoardService
+    public boardService: BoardService,
+    private cdRef: ChangeDetectorRef
     ) {}
 
   ngOnInit() {
@@ -110,6 +111,7 @@ export class HomeComponent implements OnInit {
           this.updatePlayer(this.player);
         }
         this.board = JSON.parse(JSON.stringify(res));
+        this.cdRef.markForCheck();
       })
     }
   }

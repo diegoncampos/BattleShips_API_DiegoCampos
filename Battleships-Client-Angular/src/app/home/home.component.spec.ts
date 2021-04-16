@@ -1,26 +1,34 @@
-import { element } from 'protractor';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { async, ComponentFixture, inject, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { BoardService } from 'src/services/board/board.service';
+import { Axles } from 'src/models/axles';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
-  let de: DebugElement;
   let el: HTMLElement;
   let fixture: ComponentFixture<HomeComponent>;
+  let boardService;
+  let homeComponent;
+  let element;
 
   beforeEach(async(() => {
+    TestBed.resetTestEnvironment();
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports:[FormsModule],
-      declarations: [ HomeComponent ]
+      declarations: [ HomeComponent  ],
+      imports:[ HttpClientTestingModule, HttpClientModule, FormsModule],
+      providers: [BoardService]
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(HomeComponent);
-      component = fixture.componentInstance;
-    });
+    .compileComponents();
   }));
 
   beforeEach(() => {
@@ -29,18 +37,28 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(inject([BoardService], s => {
+    boardService = s;
+    fixture = TestBed.createComponent(HomeComponent);
+    homeComponent = fixture.componentInstance;
+    element = fixture.nativeElement;
+  }));
+
+  it("should call createBoard and return list of Positions", async(() => {
+    const response: Axles[] = [];
+  
+    spyOn(boardService, 'createBoard').and.returnValue(of(response))
+  
+    homeComponent.createBoard();
+  
+    fixture.detectChanges();
+  
+    expect(homeComponent.board).toEqual(response);
+  }));
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should create the board', async(() => {
-    expect(component.createBoard()).not.toEqual([])
-  }))
-
-  it('should add Random Ships', async(() => {
-    expect(component.shipsAxles).not.toEqual([])
-  }
-  ));
 
   it('should attack on selected axles', async(() => {
     component.axles = { x: 2, y: 2 };

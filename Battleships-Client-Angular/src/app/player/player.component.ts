@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Player } from 'src/models/player';
@@ -14,11 +14,11 @@ export class PlayerComponent implements OnInit {
   private ngUnsubscribe = new Subject();
   public addPlayer: boolean = false;
   @Input() players: Player[] = [];
-  @Input() player: Player;
+  @Input() player: Player = {id: null, name: null, score: null, gamesPlayed:null};
   @Output() playerChange = new EventEmitter<Player>();
   
   
-  constructor(public playerService: PlayerService) { }
+  constructor(public playerService: PlayerService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getPlayerList();
@@ -40,6 +40,7 @@ export class PlayerComponent implements OnInit {
       else {
         this.addPlayer = true;
       }
+      this.cdRef.markForCheck();
     })
   }
 

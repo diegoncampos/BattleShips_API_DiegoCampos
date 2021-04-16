@@ -26,7 +26,6 @@ namespace BattleShips_API_DiegoCampos
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -39,10 +38,11 @@ namespace BattleShips_API_DiegoCampos
             services.AddMvc();
 
 
-            // Mock Database connection
+            // Mock Database InMemoryDatabase
             services.AddDbContext<PlayerDBContext>(options => options.UseInMemoryDatabase("Players"));
             services.AddDbContext<BoardDBContext>(options => options.UseInMemoryDatabase("Board"));
 
+            // Cors Policys to allow use locally
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -52,7 +52,6 @@ namespace BattleShips_API_DiegoCampos
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
